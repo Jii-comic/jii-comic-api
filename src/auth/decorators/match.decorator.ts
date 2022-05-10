@@ -7,7 +7,7 @@ import {
 export function Match(property: string, validationOptions?: ValidationOptions) {
     return function (object: any, propertyName: string) {
         registerDecorator({
-            name: "isLongerThan",
+            name: "Match",
             target: object.constructor,
             propertyName: propertyName,
             constraints: [property],

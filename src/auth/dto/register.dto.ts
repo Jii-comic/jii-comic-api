@@ -1,14 +1,22 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty } from "class-validator";
+import { i18nValidationMessage } from "nestjs-i18n";
 import { Match } from "../decorators/match.decorator";
 
 export class RegisterDto {
-    @IsEmail()
+    @ApiProperty()
+    @IsEmail({}, { message: i18nValidationMessage("auth.INVALID_EMAIL") })
+    @IsNotEmpty({ message: i18nValidationMessage("auth.NEED_EMAIL") })
     email: string;
 
-    @IsNotEmpty()
+    @ApiProperty()
+    @IsNotEmpty({ message: i18nValidationMessage("auth.NEED_PASSWORD") })
     password: string;
 
-    @IsNotEmpty()
-    @Match("password")
+    @ApiProperty()
+    @Match("password", {
+        message: i18nValidationMessage("auth.NEED_PASSWORD_CONFIRMATION"),
+    })
+    @IsNotEmpty({ message: i18nValidationMessage("auth.PASSWORDS_NOT_EQUAL") })
     repeatPassword: string;
 }
