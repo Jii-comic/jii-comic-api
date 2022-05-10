@@ -1,4 +1,4 @@
-import { UnauthorizedExceptionFilter } from "./unauthorized-exception.filter";
+import { UnauthorizedExceptionFilter } from "../filters/unauthorized-exception.filter";
 
 describe("UnauthorizedExceptionFilter", () => {
     it("should be defined", () => {

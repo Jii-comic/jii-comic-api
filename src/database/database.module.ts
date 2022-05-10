@@ -13,9 +13,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
                 port: configService.get("POSTGRES_PORT") || 5432,
                 username: configService.get("POSTGRES_USER") || "admin",
                 password: configService.get("POSTGRES_PASSWORD") || "admin",
-                database: configService.get("POSTGRES_DB") || "jii-comi",
-                entities: [__dirname + "/../**/*.entity.ts"],
-                synchronize: true,
+                database: configService.get("POSTGRES_DB") || "jii-comic",
+                entities: ["dist/**/*.entity.js"], // Auto import entities in project
+                // autoLoadEntities: true,
             }),
         }),
     ],
