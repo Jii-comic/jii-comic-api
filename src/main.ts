@@ -13,11 +13,16 @@ async function bootstrap() {
 
     // Global pipe for validation
     app.useGlobalPipes(
-        new ValidationPipe({ exceptionFactory: i18nValidationErrorFactory }),
+        new ValidationPipe({
+            stopAtFirstError: true,
+            exceptionFactory: i18nValidationErrorFactory,
+        }),
     );
 
     // Global filter for i18n DTO validation
-    app.useGlobalFilters(new I18nValidationExceptionFilter());
+    app.useGlobalFilters(
+        new I18nValidationExceptionFilter({ detailedErrors: false }),
+    );
 
     // Swagger API documentation
     const config = new DocumentBuilder().build();
