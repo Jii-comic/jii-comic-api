@@ -15,8 +15,13 @@ export class RegisterDto {
 
     @ApiProperty()
     @Match("password", {
+        message: i18nValidationMessage("auth.PASSWORDS_NOT_EQUAL"),
+    })
+    @IsNotEmpty({
         message: i18nValidationMessage("auth.NEED_PASSWORD_CONFIRMATION"),
     })
-    @IsNotEmpty({ message: i18nValidationMessage("auth.PASSWORDS_NOT_EQUAL") })
     repeatPassword: string;
+
+    @ApiProperty()
+    name: string;
 }

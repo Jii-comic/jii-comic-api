@@ -1,5 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotAcceptableException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Repository } from "typeorm";
 import { UsersService } from "../users/users.service";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
@@ -13,24 +22,36 @@ export class AuthService {
 
     async validateUser(loginDto: LoginDto): Promise<any> {
         const { email, password } = loginDto;
-        const user = await this.usersService.findOne(email);
+        const user: User = await this.usersService.findOneByEmail(email);
         if (user && user.password === password) {
-            const { password: userPassword, ...result } = user;
-            return result;
+            return user;
         }
         return null;
     }
 
-    async afterLogin(user: any) {
-        const payload = { username: user.username, sub: user.userId };
+    async validateRefreshTokenPayload(payload: any): Promise<User> {
+        const { userId, email } = payload;
+        if (!userId || !email) {
+            throw new UnauthorizedException();
+        }
+
+        const user: User = await this.usersService.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+
+        return user;
+    }
+
+    async afterLogin(user: User) {
+        const payload = { email: user.email, id: user.id };
         return {
+            user,
             access_token: this.jwtService.sign(payload),
         };
     }
 
-    register(registerDto: RegisterDto) {
-        return {
-            registerDto,
-        };
+    async register(registerDto: RegisterDto): Promise<User> {
+        return await this.usersService.create(registerDto);
     }
 }

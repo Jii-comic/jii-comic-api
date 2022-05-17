@@ -4,19 +4,17 @@ import {
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
-    Unique,
-    UpdateDateColumn,
 } from "typeorm";
 
-@Entity("users")
+@Entity()
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
 
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     name: string;
 
     @Column()

@@ -1,6 +1,6 @@
-import { ValidationPipe } from "@nestjs/common";
+import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import {
     i18nValidationErrorFactory,
@@ -10,6 +10,11 @@ import { AppModule } from "./app.module";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    // Global interceptors for exluded properties
+    app.useGlobalInterceptors(
+        new ClassSerializerInterceptor(app.get(Reflector)),
+    );
 
     // Global pipe for validation
     app.useGlobalPipes(
