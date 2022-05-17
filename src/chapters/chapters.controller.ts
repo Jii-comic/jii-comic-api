@@ -14,7 +14,7 @@ import { ChaptersService } from "./chapters.service";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
 import { UpdateChapterDto } from "./dto/update-chapter.dto";
 
-@Controller("chapters")
+@Controller("comics/:id/chapters")
 export class ChaptersController {
     constructor(private readonly chaptersService: ChaptersService) {}
 

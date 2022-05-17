@@ -1,7 +1,9 @@
+import { Chapter } from "src/chapters/entities/chapter.entity";
 import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
@@ -28,4 +30,8 @@ export class Comic {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    // One-to-many entity requires many-to-one relation on the other entity
+    @OneToMany(() => Chapter, (chapter) => chapter.comic)
+    chapters: Chapter[];
 }
