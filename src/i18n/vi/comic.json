@@ -1,0 +1,13 @@
+{
+    "NEED_NAME": "Vui lòng cung cấp tên truyện!",
+    "NOT_FOUND": "Không tìm thấy truyện!",
+    "INVALID_URL": "Đường dẫn ảnh không hợp lệ!",
+    "CREATE_OK": "Tạo truyện mới thành công!",
+    "CREATE_FAILED": "Tạo truyện mới thất bại!",
+    "REMOVE_OK": "Xóa truyện thành công!",
+    "REMOVE_FAILED": "Xóa truyện thất bại!",
+    "UPDATE_OK": "Cập nhật truyện thành công!",
+    "UPDATE_FAILED": "Cập nhật truyện thất bại!",
+    "NEED_ID": "Vui lòng cung cấp id truyện!",
+    "INVALID_ID": "Id truyện không hợp lệ!"
+}

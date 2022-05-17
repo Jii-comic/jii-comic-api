@@ -1,0 +1,12 @@
+{
+    "INVALID_ID": "Id chapter không hợp lệ!",
+    "NEED_ID": "Vui lòng cung cấp id chapter!",
+    "NEED_NAME": "Vui lòng cung cấp tên chapter!",
+    "REMOVE_OK": "Xóa chapter thành công!",
+    "REMOVE_FAILED": "Xóa chapter thất bại!",
+    "UPDATE_OK": "Cập nhật chapter thành công!",
+    "UPDATE_FAILED": "Cập nhật chapter thất bại!",
+    "CREATE_OK": "Tạo chapter mới thành công!",
+    "CREATE_FAILED": "Tạo chapter mới thất bại!",
+    "NOT_FOUND": "Không tìm thấy chapter!"
+}

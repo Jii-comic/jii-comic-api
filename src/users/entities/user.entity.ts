@@ -6,16 +6,22 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 
-@Entity()
+@Entity() // Init entity and auto generate table in db
 export class User {
     @PrimaryGeneratedColumn("uuid")
-    id: string;
+    user_id: string;
 
     @Column({ unique: true })
     email: string;
 
     @Column({ nullable: true })
     name: string;
+
+    @Column({ default: "user" })
+    role: "user" | "admin";
+
+    @Column({ default: "" })
+    avatarUrl: string;
 
     @Column()
     @Exclude() // Hide sensitive data

@@ -1,0 +1,12 @@
+{
+    "NEED_NAME": "Vui lòng cung cấp tên thể loại!",
+    "NOT_FOUND": "Không tìm thấy thể loại!",
+    "CREATE_OK": "Tạo thể loại mới thành công!",
+    "CREATE_FAILED": "Tạo thể loại mới thất bại!",
+    "REMOVE_OK": "Xóa thể loại thành công!",
+    "REMOVE_FAILED": "Xóa thể loại thất bại!",
+    "UPDATE_OK": "Cập nhật thể loại thành công!",
+    "UPDATE_FAILED": "Cập nhật thể loại thất bại!",
+    "NEED_ID": "Vui lòng cung cấp id thể loại!",
+    "INVALID_ID": "Id thể loại không hợp lệ!"
+}

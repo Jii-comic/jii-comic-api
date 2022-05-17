@@ -1,9 +1,12 @@
-import { ClassSerializerInterceptor, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
-import { AuthModule, JwtAuthGuard } from "./auth";
+import { AuthModule } from "./auth";
 import { DatabaseModule } from "./database";
 import { i18nModule } from "./i18n";
+
+import { ComicsModule } from "./comics/comics.module";
+import { ChaptersModule } from "./chapters/chapters.module";
+import { GenresModule } from "./genres/genres.module";
 
 @Module({
     imports: [
@@ -11,6 +14,9 @@ import { i18nModule } from "./i18n";
         i18nModule,
         DatabaseModule,
         AuthModule,
+        GenresModule,
+        ChaptersModule,
+        ComicsModule,
     ],
 })
 export class AppModule {}

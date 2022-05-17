@@ -17,15 +17,16 @@ export class UsersService {
         const user: User = new User();
         user.email = email;
         user.password = password;
+        user.role = "user";
 
         return await this.usersRepository.save(user);
     }
 
-    findAll() {
-        return `This action returns all users`;
+    async findAll(): Promise<User[]> {
+        return await this.usersRepository.find();
     }
 
-    async findOne(id: number): Promise<User> {
+    async findOne(id: string): Promise<User> {
         return await this.usersRepository.findOne(id);
     }
 
@@ -33,11 +34,11 @@ export class UsersService {
         return await this.usersRepository.findOne({ email });
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
+    update(id: string, updateUserDto: UpdateUserDto) {
         return `This action updates a #${id} user`;
     }
 
-    remove(id: number) {
+    remove(id: string) {
         return `This action removes a #${id} user`;
     }
 }
