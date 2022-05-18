@@ -8,13 +8,16 @@ import {
     Delete,
     HttpStatus,
     BadRequestException,
+    UseGuards,
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
+import { ComicsGuard } from "src/guards";
 import { ChaptersService } from "./chapters.service";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
 import { UpdateChapterDto } from "./dto/update-chapter.dto";
 
-@Controller("comics/:id/chapters")
+@Controller("comics/:comicId/chapters")
+@UseGuards(ComicsGuard)
 export class ChaptersController {
     constructor(private readonly chaptersService: ChaptersService) {}
 
