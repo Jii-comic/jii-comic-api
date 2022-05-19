@@ -1,13 +1,11 @@
 import {
     BadRequestException,
     Body,
-    ClassSerializerInterceptor,
     Controller,
     Post,
     Request,
     UseFilters,
     UseGuards,
-    UseInterceptors,
 } from "@nestjs/common";
 import { ApiBody } from "@nestjs/swagger";
 import { I18n, I18nContext } from "nestjs-i18n";
@@ -25,7 +23,6 @@ export class AuthController {
         private usersService: UsersService,
     ) {}
 
-    @UseInterceptors(ClassSerializerInterceptor)
     @Public()
     @UseGuards(LocalAuthGuard)
     @ApiBody({ type: LoginDto })

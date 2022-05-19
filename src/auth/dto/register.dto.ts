@@ -23,5 +23,8 @@ export class RegisterDto {
     repeatPassword: string;
 
     @ApiProperty()
+    @IsNotEmpty({
+        message: i18nValidationMessage("auth.NEED_NAME"),
+    })
     name: string;
 }

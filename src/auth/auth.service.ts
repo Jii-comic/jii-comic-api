@@ -30,12 +30,12 @@ export class AuthService {
     }
 
     async validateRefreshTokenPayload(payload: any): Promise<User> {
-        const { userId, email } = payload;
-        if (!userId || !email) {
+        const { user_id, email } = payload;
+        if (!user_id || !email) {
             throw new UnauthorizedException();
         }
 
-        const user: User = await this.usersService.findOne(userId);
+        const user: User = await this.usersService.findOne(user_id);
         if (!user) {
             throw new UnauthorizedException();
         }
@@ -44,7 +44,8 @@ export class AuthService {
     }
 
     async afterLogin(user: User) {
-        const payload = { email: user.email, id: user.user_id };
+        const { email, user_id } = user;
+        const payload = { email, user_id };
         return {
             user,
             access_token: this.jwtService.sign(payload),

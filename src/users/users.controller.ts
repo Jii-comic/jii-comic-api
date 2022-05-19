@@ -6,7 +6,12 @@ import {
     Patch,
     Param,
     Delete,
+    UseGuards,
+    Request,
+    UseInterceptors,
+    ClassSerializerInterceptor,
 } from "@nestjs/common";
+import { JwtAuthGuard } from "src/auth/guards";
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { UsersService } from "./users.service";
 
@@ -22,6 +27,12 @@ export class UsersController {
     @Get()
     findAll() {
         return this.usersService.findAll();
+    }
+
+    @Get("me")
+    @UseGuards(JwtAuthGuard)
+    findMe(@Request() req) {
+        return req.user;
     }
 
     @Get(":id")

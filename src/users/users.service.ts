@@ -13,12 +13,7 @@ export class UsersService {
         private usersRepository: Repository<User>,
     ) {}
     async create(createUserDto: CreateUserDto) {
-        const { email, password } = createUserDto;
-        const user: User = new User();
-        user.email = email;
-        user.password = password;
-        user.role = "user";
-
+        const user = this.usersRepository.create(createUserDto);
         return await this.usersRepository.save(user);
     }
 
