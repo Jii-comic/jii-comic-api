@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Comic } from "src/comics/entities/comic.entity";
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Genre {
@@ -10,4 +11,7 @@ export class Genre {
 
     @Column({ nullable: true })
     description: string;
+
+    @ManyToMany(() => Comic, (comic) => comic.genres)
+    comics: Comic[];
 }

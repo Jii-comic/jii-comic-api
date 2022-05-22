@@ -17,11 +17,13 @@ export class ComicsService {
     }
 
     async findAll(): Promise<Comic[]> {
-        return await this.comicRepository.find();
+        return await this.comicRepository.find({ relations: ["genres"] });
     }
 
     async findOne(id: string): Promise<Comic> {
-        return await this.comicRepository.findOne(id);
+        return await this.comicRepository.findOne(id, {
+            relations: ["genres"],
+        });
     }
 
     async update(id: string, updateComicDto: UpdateComicDto) {

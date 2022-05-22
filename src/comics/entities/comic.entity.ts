@@ -1,8 +1,11 @@
 import { Chapter } from "src/chapters/entities/chapter.entity";
+import { Genre } from "src/genres/entities/genre.entity";
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinTable,
+    ManyToMany,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -34,4 +37,9 @@ export class Comic {
     // One-to-many entity requires many-to-one relation on the other entity
     @OneToMany(() => Chapter, (chapter) => chapter.comic)
     chapters: Chapter[];
+
+    // Many-to-many entity requires @jointable
+    @ManyToMany(() => Genre, (genre) => genre.comics)
+    @JoinTable()
+    genres: Genre[];
 }

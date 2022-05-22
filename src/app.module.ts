@@ -7,6 +7,8 @@ import { i18nModule } from "./i18n";
 import { ComicsModule } from "./comics/comics.module";
 import { ChaptersModule } from "./chapters/chapters.module";
 import { GenresModule } from "./genres/genres.module";
+import { CloudinaryModule } from "./cloudinary/cloudinary.module";
+import { UploadModule } from "./upload/upload.module";
 
 @Module({
     imports: [
@@ -14,9 +16,11 @@ import { GenresModule } from "./genres/genres.module";
         i18nModule,
         DatabaseModule,
         AuthModule,
+        UploadModule,
         GenresModule,
         ChaptersModule,
         ComicsModule,
+        CloudinaryModule,
     ],
 })
 export class AppModule {}

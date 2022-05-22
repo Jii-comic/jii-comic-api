@@ -27,7 +27,7 @@ export class GenresController {
             const genre = await this.genresService.create(createGenreDto);
             return {
                 statusCode: HttpStatus.OK,
-                message: await i18n.t("comic.CREATE_OK"),
+                message: await i18n.t("genre.CREATE_OK"),
                 data: genre,
             };
         } catch (err) {
