@@ -14,7 +14,8 @@ export class ComicsGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        const { comicId } = request || {};
+        const { comicId } = request.params || {};
+
         const i18n = getI18nContextFromRequest(request);
         let comic;
 
@@ -23,7 +24,7 @@ export class ComicsGuard implements CanActivate {
         }
 
         try {
-            comic = this.comicsService.findOne(comicId);
+            comic = await this.comicsService.findOne(comicId);
         } catch (err) {
             throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
         }

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsJSON, IsNotEmpty, IsOptional } from "class-validator";
+import { IsArray, IsJSON, IsNotEmpty, IsOptional } from "class-validator";
 import { i18nValidationMessage } from "nestjs-i18n";
 
 export class CreateChapterDto {
@@ -8,7 +8,7 @@ export class CreateChapterDto {
     name: string;
 
     @ApiProperty()
-    @IsJSON({ message: i18nValidationMessage("chapter.INVALID_CONTENT") })
+    @IsArray({ message: i18nValidationMessage("chapter.INVALID_CONTENT") })
     @IsOptional()
-    content: any;
+    pages: string[];
 }

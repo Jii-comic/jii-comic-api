@@ -17,7 +17,7 @@ export class Chapter {
     name: string;
 
     @Column({ type: "jsonb", nullable: true })
-    content: any;
+    pages: any;
 
     @CreateDateColumn()
     created_at: Date;

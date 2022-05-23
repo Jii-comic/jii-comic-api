@@ -11,6 +11,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
+import { ComicsService } from "src/comics/comics.service";
 import { ComicsGuard } from "src/guards";
 import { ChaptersService } from "./chapters.service";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
@@ -19,15 +20,23 @@ import { UpdateChapterDto } from "./dto/update-chapter.dto";
 @Controller("comics/:comicId/chapters")
 @UseGuards(ComicsGuard)
 export class ChaptersController {
-    constructor(private readonly chaptersService: ChaptersService) {}
+    constructor(
+        private readonly chaptersService: ChaptersService,
+        private readonly comicsService: ComicsService,
+    ) {}
 
     @Post()
     async create(
         @I18n() i18n: I18nContext,
         @Body() createChapterDto: CreateChapterDto,
+        @Param("comicId") comicId: string,
     ) {
         try {
-            const chapter = await this.chaptersService.create(createChapterDto);
+            const comic = await this.comicsService.findOne(comicId);
+            const chapter = await this.chaptersService.create(
+                createChapterDto,
+                comic,
+            );
             return {
                 statusCode: HttpStatus.OK,
                 message: await i18n.t("chapter.CREATE_OK"),

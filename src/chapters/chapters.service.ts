@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Comic } from "src/comics/entities/comic.entity";
 import { Repository } from "typeorm";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
 import { UpdateChapterDto } from "./dto/update-chapter.dto";
@@ -11,8 +12,9 @@ export class ChaptersService {
         @InjectRepository(Chapter)
         private chapterRepository: Repository<Chapter>,
     ) {}
-    async create(createChapterDto: CreateChapterDto) {
+    async create(createChapterDto: CreateChapterDto, comic: Comic) {
         const chapter = this.chapterRepository.create(createChapterDto);
+        chapter.comic = comic;
         return await this.chapterRepository.save(chapter);
     }
 

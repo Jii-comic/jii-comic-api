@@ -22,7 +22,7 @@ export class ComicsService {
 
     async findOne(id: string): Promise<Comic> {
         return await this.comicRepository.findOne(id, {
-            relations: ["genres"],
+            relations: ["genres", "chapters"],
         });
     }
 
