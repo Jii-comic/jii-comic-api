@@ -2,7 +2,7 @@ import { Comic } from "src/comics/entities/comic.entity";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Genre {
+export class Follower {
     @PrimaryGeneratedColumn("uuid")
     genre_id: string;
 

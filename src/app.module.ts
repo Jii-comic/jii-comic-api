@@ -9,6 +9,8 @@ import { ChaptersModule } from "./chapters/chapters.module";
 import { GenresModule } from "./genres/genres.module";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 import { UploadModule } from "./upload/upload.module";
+import { FollowersModule } from './followers/followers.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { UploadModule } from "./upload/upload.module";
         ChaptersModule,
         ComicsModule,
         CloudinaryModule,
+        FollowersModule,
+        CommentsModule,
     ],
 })
 export class AppModule {}

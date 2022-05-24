@@ -1,5 +1,6 @@
 import { Chapter } from "src/chapters/entities/chapter.entity";
 import { Genre } from "src/genres/entities/genre.entity";
+import { User } from "src/users/entities/user.entity";
 import {
     Column,
     CreateDateColumn,
@@ -31,7 +32,10 @@ export class Comic {
     @CreateDateColumn()
     created_at: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({
+        type: "timestamp",
+        onUpdate: "CURRENT_TIMESTAMP(6)",
+    })
     updated_at: Date;
 
     // One-to-many entity requires many-to-one relation on the other entity
@@ -42,4 +46,8 @@ export class Comic {
     @ManyToMany(() => Genre, (genre) => genre.comics)
     @JoinTable()
     genres: Genre[];
+
+    @ManyToMany(() => User, (user) => user.comics)
+    @JoinTable()
+    users: User[];
 }

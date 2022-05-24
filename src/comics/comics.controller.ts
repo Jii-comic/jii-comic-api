@@ -8,8 +8,12 @@ import {
     Delete,
     HttpStatus,
     BadRequestException,
+    UseGuards,
+    Request,
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
+import { JwtAuthGuard } from "src/auth";
+import { UsersService } from "src/users";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
@@ -47,6 +51,18 @@ export class ComicsController {
         } catch (err) {
             throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
         }
+    }
+
+    @Post(":id/follow")
+    @UseGuards(JwtAuthGuard)
+    async follow(
+        @I18n() i18n: I18nContext,
+        @Param("id") comicId: string,
+        @Request() req,
+    ) {
+        const { user } = req;
+
+        return await this.comicsService.follow(comicId, user);
     }
 
     @Patch(":id")

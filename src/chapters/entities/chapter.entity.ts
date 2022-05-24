@@ -22,7 +22,10 @@ export class Chapter {
     @CreateDateColumn()
     created_at: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({
+        type: "timestamp",
+        onUpdate: "CURRENT_TIMESTAMP(6)",
+    })
     updated_at: Date;
 
     @ManyToOne(() => Comic, (comic) => comic.chapters)

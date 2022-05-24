@@ -8,6 +8,7 @@ import {
     Delete,
     BadRequestException,
     HttpStatus,
+    UseGuards,
 } from "@nestjs/common";
 import { GenresService } from "./genres.service";
 import { CreateGenreDto } from "./dto/create-genre.dto";
@@ -99,6 +100,7 @@ export class GenresController {
                 message: await i18n.t("genre.REMOVE_OK"),
             };
         } catch (err) {
+            console.error(err);
             throw new BadRequestException(await i18n.t("genre.REMOVE_FAILED"));
         }
     }
