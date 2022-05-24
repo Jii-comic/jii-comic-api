@@ -14,7 +14,7 @@ import { UsersService } from "src/users";
 import { AuthService } from "./auth.service";
 import { LoginDto, RegisterDto } from "./dto";
 import { UnauthorizedExceptionFilter } from "./filters/unauthorized-exception.filter";
-import { LocalAuthGuard } from "./guards";
+import { JwtAuthGuard, LocalAuthGuard } from "./guards";
 
 @Controller("auth")
 export class AuthController {
@@ -31,6 +31,12 @@ export class AuthController {
     // Post login after LocalAuthGuard validation
     async afterLogin(@Request() req) {
         return this.authService.afterLogin(req.user);
+    }
+
+    @Post("/verify-token")
+    @UseGuards(JwtAuthGuard)
+    async verifyToken(@Request() req) {
+        return req.user;
     }
 
     @Public()

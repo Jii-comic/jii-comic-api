@@ -27,7 +27,13 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
-        const user: User = await this.usersService.findOne(user_id);
+        let user;
+        try {
+            user = await this.usersService.findOne(user_id);
+        } catch (err) {
+            throw new UnauthorizedException();
+        }
+
         if (!user) {
             throw new UnauthorizedException();
         }
