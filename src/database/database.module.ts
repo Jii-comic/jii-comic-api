@@ -8,19 +8,31 @@ import { UsersModule } from "src/users/users.module";
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                type: "postgres",
-                host: configService.get("POSTGRES_HOST") || "host",
-                port: configService.get("POSTGRES_PORT") || 5432,
-                username: configService.get("POSTGRES_USER") || "postgres",
-                password: configService.get("POSTGRES_PASSWORD") || "admin",
-                database: configService.get("POSTGRES_DB") || "jii-comic",
-                // Auto import entities
-                // -> No need to import outside `app.module`
-                autoLoadEntities: true,
-                // Auto create schema in db while importing entities
-                synchronize: true,
-            }),
+            useFactory: (configService: ConfigService) => {
+                let dbInfo;
+                if (configService.get("DATABASE_URL")) {
+                    dbInfo = {
+                        url: configService.get("DATABASE_URL"),
+                    };
+                } else {
+                    dbInfo = {
+                        host: configService.get("DATABASE_HOST") || "host",
+                        port: configService.get("DATABASE_PORT") || 5432,
+                    };
+                }
+                return {
+                    type: "postgres",
+                    ...dbInfo,
+                    username: configService.get("DATABASE_USER") || "postgres",
+                    password: configService.get("DATABASE_PASSWORD") || "admin",
+                    database: configService.get("DATABASE_NAME") || "jii-comic",
+                    // Auto import entities
+                    // -> No need to import outside `app.module`
+                    autoLoadEntities: true,
+                    // Auto create schema in db while importing entities
+                    synchronize: true,
+                };
+            },
         }),
     ],
 })
