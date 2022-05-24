@@ -37,6 +37,25 @@ export class ComicsService {
             .getOne();
     }
 
+    async checkFollow(id: string, user: User): Promise<boolean> {
+        const { users } = await this.comicRepository.findOne({
+            join: {
+                alias: "comics",
+                leftJoinAndSelect: { users: "comics.users" },
+            },
+            where: (qb) => {
+                qb.where({
+                    // Filter Role fields
+                    comic_id: id,
+                }).andWhere("users.user_id = :userId", {
+                    userId: user.user_id,
+                });
+            },
+        });
+
+        return !!users;
+    }
+
     async findOneWithOptions(id: string, options): Promise<Comic> {
         return await this.comicRepository.findOne(id, options);
     }
@@ -53,16 +72,29 @@ export class ComicsService {
     }
 
     async follow(id: string, user: User) {
-        const comic: Comic = await this.comicRepository.findOne(id, {
-            relations: ["users"],
+        const comic = await this.comicRepository.findOne({
+            join: {
+                alias: "comics",
+                leftJoinAndSelect: { users: "comics.users" },
+            },
+            where: (qb) => {
+                qb.where({
+                    // Filter Role fields
+                    comic_id: id,
+                });
+            },
         });
 
-        const withoutUserFollow = comic.users.filter(
-            (followedUser) => followedUser.user_id !== user.user_id,
-        );
-        const hasUnfollowed = comic.users.length - withoutUserFollow.length > 0;
+        const withoutUserFollow =
+            comic?.users?.filter?.(
+                (followedUser) => followedUser.user_id !== user.user_id,
+            ) || [];
+        const hasUnfollowed =
+            (comic?.users?.length ?? 0) - withoutUserFollow.length > 0;
         if (!hasUnfollowed) {
-            comic.users.push(user);
+            comic?.users.push(user);
+        } else {
+            comic.users = withoutUserFollow;
         }
 
         this.comicRepository.save(comic);

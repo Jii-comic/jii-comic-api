@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFollowerDto } from './dto/create-follower.dto';
-import { UpdateFollowerDto } from './dto/update-follower.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CreateFollowerDto } from "./dto/create-follower.dto";
+import { UpdateFollowerDto } from "./dto/update-follower.dto";
+import { Follower } from "./entities/follower.entity";
 
 @Injectable()
 export class FollowersService {
-  create(createFollowerDto: CreateFollowerDto) {
-    return 'This action adds a new follower';
-  }
+    constructor(
+        @InjectRepository(Follower)
+        private followerRepository: Repository<Follower>,
+    ) {}
 
-  findAll() {
-    return `This action returns all followers`;
-  }
+    async create(createFollowerDto: CreateFollowerDto) {
+        const follower = this.followerRepository.create(createFollowerDto);
+        return await this.followerRepository.save(follower);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} follower`;
-  }
+    findAll() {
+        return `This action returns all followers`;
+    }
 
-  update(id: number, updateFollowerDto: UpdateFollowerDto) {
-    return `This action updates a #${id} follower`;
-  }
+    async findOne(createFollowerDto: CreateFollowerDto) {
+        return await this.followerRepository.findOne(createFollowerDto);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} follower`;
-  }
+    update(id: number, updateFollowerDto: UpdateFollowerDto) {
+        return `This action updates a #${id} follower`;
+    }
+
+    remove(id: number) {
+        return `This action removes a #${id} follower`;
+    }
 }

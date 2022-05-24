@@ -1,17 +1,16 @@
 import { Comic } from "src/comics/entities/comic.entity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { Entity, Index, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
+@Index(["comic", "user"], { unique: true })
 export class Follower {
     @PrimaryGeneratedColumn("uuid")
-    genre_id: string;
+    follower_id: string;
 
-    @Column()
-    name: string;
+    @OneToOne(() => Comic, (comic) => comic.comic_id)
+    comic: Comic;
 
-    @Column({ nullable: true })
-    description: string;
-
-    @ManyToMany(() => Comic, (comic) => comic.genres, { onDelete: "CASCADE" })
-    comics: Comic[];
+    @OneToOne(() => User)
+    user: User;
 }

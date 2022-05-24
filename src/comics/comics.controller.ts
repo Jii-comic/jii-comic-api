@@ -13,6 +13,7 @@ import {
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
 import { JwtAuthGuard } from "src/auth";
+import { FollowersService } from "src/followers/followers.service";
 import { UsersService } from "src/users";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
@@ -53,6 +54,33 @@ export class ComicsController {
         }
     }
 
+    @Get(":id/follow")
+    @UseGuards(JwtAuthGuard)
+    async isFollow(
+        @I18n() i18n: I18nContext,
+        @Param("id") comicId: string,
+        @Request() req,
+    ) {
+        const { user } = req;
+        let comic;
+        // TODO: Check for existence
+        try {
+            comic = await this.comicsService.findOne(comicId);
+            if (!comic) {
+                throw new Error();
+            }
+        } catch (err) {
+            throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
+        }
+
+        try {
+            return await this.comicsService.checkFollow(comicId, user);
+        } catch (err) {
+            console.log(err);
+            throw new BadRequestException();
+        }
+    }
+
     @Post(":id/follow")
     @UseGuards(JwtAuthGuard)
     async follow(
@@ -61,8 +89,23 @@ export class ComicsController {
         @Request() req,
     ) {
         const { user } = req;
+        let comic;
+        // TODO: Check for existence
+        try {
+            comic = await this.comicsService.findOne(comicId);
+            if (!comic) {
+                throw new Error();
+            }
+        } catch (err) {
+            throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
+        }
 
-        return await this.comicsService.follow(comicId, user);
+        try {
+            return await this.comicsService.follow(comicId, user);
+        } catch (err) {
+            console.log(err);
+            throw new BadRequestException();
+        }
     }
 
     @Patch(":id")
