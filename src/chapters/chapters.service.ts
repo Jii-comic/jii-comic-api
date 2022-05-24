@@ -23,7 +23,9 @@ export class ChaptersService {
     }
 
     async findOne(id: string) {
-        return await this.chapterRepository.findOne(id);
+        return await this.chapterRepository.findOne(id, {
+            relations: ["comic"],
+        });
     }
 
     async update(id: string, updateChapterDto: UpdateChapterDto) {
