@@ -22,6 +22,10 @@ import { UsersModule } from "src/users/users.module";
                     autoLoadEntities: true,
                     // Auto create schema in db while importing entities
                     synchronize: true,
+                    ssl:
+                        process.env.NODE_ENV === "production"
+                            ? { rejectUnauthorized: false }
+                            : false,
                 };
             },
         }),
