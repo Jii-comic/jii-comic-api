@@ -10,6 +10,7 @@ import { UsersModule } from "src/users/users.module";
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
                 let dbInfo;
+                console.log(configService.get("DATABASE_URL"));
                 if (configService.get("DATABASE_URL")) {
                     dbInfo = {
                         url: configService.get("DATABASE_URL"),
@@ -26,6 +27,7 @@ import { UsersModule } from "src/users/users.module";
                     username: configService.get("DATABASE_USER") || "postgres",
                     password: configService.get("DATABASE_PASSWORD") || "admin",
                     database: configService.get("DATABASE_NAME") || "jii-comic",
+                    ssl: true,
                     // Auto import entities
                     // -> No need to import outside `app.module`
                     autoLoadEntities: true,
