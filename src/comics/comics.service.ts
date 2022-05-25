@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
-import { Repository } from "typeorm";
+import { FindManyOptions, Like, Repository } from "typeorm";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
 import { Comic } from "./entities/comic.entity";
@@ -22,8 +22,11 @@ export class ComicsService {
         return await this.comicRepository.save(comic);
     }
 
-    async findAll(): Promise<Comic[]> {
-        return await this.comicRepository.find({ relations: ["genres"] });
+    async findAll(options?: any): Promise<Comic[]> {
+        return await this.comicRepository.find({
+            relations: ["genres"],
+            ...options,
+        });
     }
 
     async findOne(id: string): Promise<Comic> {
