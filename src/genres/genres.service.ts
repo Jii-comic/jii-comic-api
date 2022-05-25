@@ -16,8 +16,10 @@ export class GenresService {
         return await this.genreRepository.save(genre);
     }
 
-    async findAll() {
-        return await this.genreRepository.find();
+    async findAll(options?: any) {
+        return await this.genreRepository.find({
+            ...options,
+        });
     }
 
     async findOne(id: string) {

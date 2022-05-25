@@ -9,11 +9,13 @@ import {
     BadRequestException,
     HttpStatus,
     UseGuards,
+    Query,
 } from "@nestjs/common";
 import { GenresService } from "./genres.service";
 import { CreateGenreDto } from "./dto/create-genre.dto";
 import { UpdateGenreDto } from "./dto/update-genre.dto";
 import { I18n, I18nContext } from "nestjs-i18n";
+import { ILike, Like } from "typeorm";
 
 @Controller("genres")
 export class GenresController {
@@ -37,8 +39,12 @@ export class GenresController {
     }
 
     @Get()
-    findAll() {
-        return this.genresService.findAll();
+    async findAll(@Query("query") query: string) {
+        return await this.genresService.findAll(
+            query && {
+                where: { name: ILike(`%${query}%`) },
+            },
+        );
     }
 
     @Get(":id")

@@ -24,8 +24,8 @@ export class ComicsService {
 
     async findAll(options?: any): Promise<Comic[]> {
         return await this.comicRepository.find({
-            relations: ["genres"],
             ...options,
+            relations: ["genres"],
         });
     }
 

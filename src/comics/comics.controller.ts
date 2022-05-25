@@ -16,7 +16,7 @@ import { I18n, I18nContext } from "nestjs-i18n";
 import { JwtAuthGuard } from "src/auth";
 import { FollowersService } from "src/followers/followers.service";
 import { UsersService } from "src/users";
-import { Like } from "typeorm";
+import { ILike, Like } from "typeorm";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
@@ -43,16 +43,14 @@ export class ComicsController {
     }
 
     @Get()
-    async findAll(@Query("q") query: string) {
-        console.log(query);
-        const result = await this.comicsService.findAll(
+    async findAll(@Query("query") query: string) {
+        return await this.comicsService.findAll(
             query && {
                 where: {
-                    name: Like(`%${query}%`),
+                    name: ILike(`%${query}%`),
                 },
             },
         );
-        return result;
     }
 
     @Get(":id")
