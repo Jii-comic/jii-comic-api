@@ -64,10 +64,13 @@ export class ComicsService {
     }
 
     async update(id: string, updateComicDto: UpdateComicDto) {
-        return await this.comicRepository.save({
-            comic_id: id,
-            ...updateComicDto,
-        });
+        // ? Use update() to update timestamp
+        return await this.comicRepository.update(
+            {
+                comic_id: id,
+            },
+            updateComicDto,
+        );
     }
 
     async remove(id: string) {

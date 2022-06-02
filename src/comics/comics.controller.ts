@@ -19,6 +19,7 @@ import { UsersService } from "src/users";
 import { ILike, Like } from "typeorm";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
+import { FindAllOptionsDto } from "./dto/find-all-option.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
 
 @Controller("comics")
@@ -43,14 +44,21 @@ export class ComicsController {
     }
 
     @Get()
-    async findAll(@Query("query") query: string) {
-        return await this.comicsService.findAll(
-            query && {
-                where: {
-                    name: ILike(`%${query}%`),
-                },
-            },
-        );
+    async findAll(@Query() options: FindAllOptionsDto) {
+        const findOptions: any = {};
+        findOptions.order = {
+            [options.orderBy ?? "created_at"]: options.order ?? "DESC", // Newest
+        };
+        if (options.limit) {
+            findOptions.take = options.limit;
+        }
+        if (options.query) {
+            findOptions.where = {
+                name: ILike(`%${options.query}%`),
+            };
+        }
+
+        return await this.comicsService.findAll(findOptions);
     }
 
     @Get(":id")

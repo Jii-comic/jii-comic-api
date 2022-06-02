@@ -37,6 +37,9 @@ export class ChaptersController {
                 createChapterDto,
                 comic,
             );
+            // TODO: Update comic `updated_at` after successfully created chapter
+            await this.comicsService.update(comicId, {});
+
             return {
                 statusCode: HttpStatus.OK,
                 message: await i18n.t("chapter.CREATE_OK"),
