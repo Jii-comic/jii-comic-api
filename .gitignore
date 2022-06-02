@@ -396,3 +396,6 @@ Temporary Items
 # Local
 .env
 dist
+
+# Db backup/restore file
+*.dump

@@ -7,6 +7,7 @@ import {
     I18nValidationExceptionFilter,
 } from "nestjs-i18n";
 import { AppModule } from "./app.module";
+import { ApiKeyGuard } from "./guards/api-key.guard";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);

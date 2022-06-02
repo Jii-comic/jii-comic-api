@@ -11,8 +11,17 @@ import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 import { UploadModule } from "./upload/upload.module";
 import { FollowersModule } from "./followers/followers.module";
 import { CommentsModule } from "./comments/comments.module";
+import { APP_GUARD } from "@nestjs/core";
+import { ApiKeyGuard } from "./guards/api-key.guard";
 
 @Module({
+    providers: [
+        // Global guard for api key
+        {
+            provide: APP_GUARD,
+            useClass: ApiKeyGuard,
+        },
+    ],
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
         i18nModule,
