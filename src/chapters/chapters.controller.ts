@@ -53,28 +53,39 @@ export class ChaptersController {
     }
 
     @Get()
-    findAll() {
-        return this.chaptersService.findAll();
+    findAll(@Param("comicId") comicId: string) {
+        return this.chaptersService.findAll(comicId);
     }
 
     @Get(":id")
-    async findOne(@I18n() i18n: I18nContext, @Param("id") id: string) {
+    async findOne(
+        @I18n() i18n: I18nContext,
+        @Param("id") chapterId: string,
+        @Param("comicId") comicId: string,
+    ) {
         try {
-            return await this.chaptersService.findOne(id);
+            return await this.chaptersService.findOne(comicId, chapterId, {
+                getPrevAndNext: true,
+            });
         } catch (err) {
+            console.log(err);
             throw new BadRequestException(await i18n.t("chapter.NOT_FOUND"));
         }
     }
 
     @Patch(":id")
     async update(
-        @Param("id") id: string,
+        @Param("comicId") comicId: string,
+        @Param("id") chapterId: string,
         @Body() updateChapterDto: UpdateChapterDto,
         @I18n() i18n: I18nContext,
     ) {
         // TODO: Check for existence
         try {
-            const chapter = await this.chaptersService.findOne(id);
+            const chapter = await this.chaptersService.findOne(
+                comicId,
+                chapterId,
+            );
             if (!chapter) {
                 throw new Error();
             }
@@ -84,7 +95,7 @@ export class ChaptersController {
 
         try {
             const updatedChapter = await this.chaptersService.update(
-                id,
+                chapterId,
                 updateChapterDto,
             );
             return {
@@ -100,10 +111,17 @@ export class ChaptersController {
     }
 
     @Delete(":id")
-    async remove(@Param("id") id: string, @I18n() i18n: I18nContext) {
+    async remove(
+        @Param("id") chapterId: string,
+        @Param("comicId") comicId: string,
+        @I18n() i18n: I18nContext,
+    ) {
         // TODO: Check for existence
         try {
-            const chapter = await this.chaptersService.findOne(id);
+            const chapter = await this.chaptersService.findOne(
+                comicId,
+                chapterId,
+            );
             if (!chapter) {
                 throw new Error();
             }
@@ -112,7 +130,7 @@ export class ChaptersController {
         }
 
         try {
-            await this.chaptersService.remove(id);
+            await this.chaptersService.remove(chapterId);
             return {
                 statusCode: HttpStatus.OK,
                 message: await i18n.t("chapter.REMOVE_OK"),

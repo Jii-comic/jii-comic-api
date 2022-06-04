@@ -24,13 +24,6 @@ export class ComicsService {
     }
 
     async findAll(options?: FindAllOptionsDto): Promise<Comic[]> {
-        // return await this.comicRepository.find({
-        //     ...options,
-        //     relations: ["genres"],
-        // });
-
-        console.log(options);
-
         return await this.getQueryBuilder()
             .take(options.limit || 0)
             .where("comic.name ilike :name", {
