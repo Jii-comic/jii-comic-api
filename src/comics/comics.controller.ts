@@ -45,20 +45,22 @@ export class ComicsController {
 
     @Get()
     async findAll(@Query() options: FindAllOptionsDto) {
-        const findOptions: any = {};
-        findOptions.order = {
-            [options.orderBy ?? "created_at"]: options.order ?? "DESC", // Newest
-        };
-        if (options.limit) {
-            findOptions.take = options.limit;
-        }
-        if (options.query) {
-            findOptions.where = {
-                name: ILike(`%${options.query}%`),
-            };
-        }
+        // const findOptions: any = {};
+        // findOptions.order = {
+        //     [options.orderBy || "created_at"]: options.order || "DESC", // Newest
+        // };
+        // if (options.limit) {
+        //     findOptions.take = options.limit;
+        // }
+        // if (options.query) {
+        //     findOptions.where = {
+        //         name: `%${options.query}%`,
+        //     };
+        // }
 
-        return await this.comicsService.findAll(findOptions);
+        // console.log(findOptions);
+
+        return await this.comicsService.findAll(options);
     }
 
     @Get(":id")

@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
 import { FindManyOptions, Like, Repository } from "typeorm";
 import { CreateComicDto } from "./dto/create-comic.dto";
+import { FindAllOptionsDto } from "./dto/find-all-option.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
 import { Comic } from "./entities/comic.entity";
 
@@ -22,21 +23,45 @@ export class ComicsService {
         return await this.comicRepository.save(comic);
     }
 
-    async findAll(options?: any): Promise<Comic[]> {
-        return await this.comicRepository.find({
-            ...options,
-            relations: ["genres"],
-        });
+    async findAll(options?: FindAllOptionsDto): Promise<Comic[]> {
+        // return await this.comicRepository.find({
+        //     ...options,
+        //     relations: ["genres"],
+        // });
+
+        console.log(options);
+
+        return await this.getQueryBuilder()
+            .take(options.limit || 0)
+            .where("comic.name ilike :name", {
+                name: `%${options.query || ""}%`,
+            })
+            .leftJoin("comic.chapters", "chapter")
+            // Select fields after join
+            .addSelect([
+                "chapter.chapter_id",
+                "chapter.name",
+                "chapter.created_at",
+                "chapter.updated_at",
+            ])
+            .leftJoinAndSelect("comic.genres", "genre")
+            .orderBy(`comic.${options.orderBy}`, options.order)
+            .getMany();
     }
 
     async findOne(id: string): Promise<Comic> {
         return await this.getQueryBuilder()
             .where("comic.comic_id=:id", { id })
-            .leftJoinAndSelect("comic.chapters", "chapter")
-            .leftJoinAndSelect("comic.users", "user")
+            .leftJoin("comic.chapters", "chapter")
+            // Select fields after join
+            .addSelect([
+                "chapter.chapter_id",
+                "chapter.name",
+                "chapter.created_at",
+                "chapter.updated_at",
+            ])
             .leftJoinAndSelect("comic.genres", "genre")
-            .loadRelationCountAndMap("comic.followerCount", "comic.users")
-            .orderBy("chapter.created_at", "ASC")
+            .orderBy("chapter.created_at", "DESC")
             .getOne();
     }
 
