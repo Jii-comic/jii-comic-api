@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/users/entities/user.entity";
-import { FindManyOptions, Like, Repository } from "typeorm";
+import { Equal, FindManyOptions, In, Like, Repository } from "typeorm";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { FindAllOptionsDto } from "./dto/find-all-option.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
@@ -57,24 +57,28 @@ export class ComicsService {
             .orderBy("chapter.created_at", "DESC")
             .getOne();
     }
+    async checkFollow(comicId: string, user: User): Promise<boolean> {
+        return !!(await this.getQueryBuilder()
+            .leftJoinAndSelect("comic.users", "user")
+            .where("comic.comic_id = :comicId", { comicId })
+            .andWhere("user.user_id = :userId", { userId: user.user_id })
+            .getOne());
+    }
 
-    async checkFollow(id: string, user: User): Promise<boolean> {
-        const { users } = await this.comicRepository.findOne({
-            join: {
-                alias: "comics",
-                leftJoinAndSelect: { users: "comics.users" },
-            },
-            where: (qb) => {
-                qb.where({
-                    // Filter Role fields
-                    comic_id: id,
-                }).andWhere("users.user_id = :userId", {
-                    userId: user.user_id,
-                });
-            },
-        });
-
-        return !!users;
+    async follow(
+        comic: Comic,
+        user: User,
+    ): Promise<{ status: "REMOVED" | "FOLLOWED" }> {
+        try {
+            await this.getQueryBuilder().relation("users").of(comic).add(user);
+            return { status: "FOLLOWED" };
+        } catch (err) {
+            await this.getQueryBuilder()
+                .relation("users")
+                .of(comic)
+                .remove(user);
+            return { status: "REMOVED" };
+        }
     }
 
     async findOneWithOptions(id: string, options): Promise<Comic> {
@@ -93,35 +97,5 @@ export class ComicsService {
 
     async remove(id: string) {
         return await this.comicRepository.delete(id);
-    }
-
-    async follow(id: string, user: User) {
-        const comic = await this.comicRepository.findOne({
-            join: {
-                alias: "comics",
-                leftJoinAndSelect: { users: "comics.users" },
-            },
-            where: (qb) => {
-                qb.where({
-                    // Filter Role fields
-                    comic_id: id,
-                });
-            },
-        });
-
-        const withoutUserFollow =
-            comic?.users?.filter?.(
-                (followedUser) => followedUser.user_id !== user.user_id,
-            ) || [];
-        const hasUnfollowed =
-            (comic?.users?.length ?? 0) - withoutUserFollow.length > 0;
-        if (!hasUnfollowed) {
-            comic?.users.push(user);
-        } else {
-            comic.users = withoutUserFollow;
-        }
-
-        this.comicRepository.save(comic);
-        return { followerCount: comic.users.length, followed: !hasUnfollowed };
     }
 }

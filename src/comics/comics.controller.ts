@@ -14,13 +14,11 @@ import {
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
 import { JwtAuthGuard } from "src/auth";
-import { FollowersService } from "src/followers/followers.service";
-import { UsersService } from "src/users";
-import { ILike, Like } from "typeorm";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { FindAllOptionsDto } from "./dto/find-all-option.dto";
 import { UpdateComicDto } from "./dto/update-comic.dto";
+import { Comic } from "./entities/comic.entity";
 
 @Controller("comics")
 export class ComicsController {
@@ -45,22 +43,24 @@ export class ComicsController {
 
     @Get()
     async findAll(@Query() options: FindAllOptionsDto) {
-        // const findOptions: any = {};
-        // findOptions.order = {
-        //     [options.orderBy || "created_at"]: options.order || "DESC", // Newest
-        // };
-        // if (options.limit) {
-        //     findOptions.take = options.limit;
-        // }
-        // if (options.query) {
-        //     findOptions.where = {
-        //         name: `%${options.query}%`,
-        //     };
-        // }
-
-        // console.log(findOptions);
-
         return await this.comicsService.findAll(options);
+    }
+
+    @Get(":id/check-follow-status")
+    @UseGuards(JwtAuthGuard)
+    async findOneWithFollowStatus(
+        @I18n() i18n: I18nContext,
+        @Param("id") comicId: string,
+        @Request() req,
+    ) {
+        const { user } = req;
+
+        try {
+            return await this.comicsService.checkFollow(comicId, user);
+        } catch (err) {
+            console.log(err);
+            throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
+        }
     }
 
     @Get(":id")
@@ -74,40 +74,13 @@ export class ComicsController {
 
     @Get(":id/follow")
     @UseGuards(JwtAuthGuard)
-    async isFollow(
-        @I18n() i18n: I18nContext,
-        @Param("id") comicId: string,
-        @Request() req,
-    ) {
-        const { user } = req;
-        let comic;
-        // TODO: Check for existence
-        try {
-            comic = await this.comicsService.findOne(comicId);
-            if (!comic) {
-                throw new Error();
-            }
-        } catch (err) {
-            throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
-        }
-
-        try {
-            return await this.comicsService.checkFollow(comicId, user);
-        } catch (err) {
-            console.log(err);
-            throw new BadRequestException();
-        }
-    }
-
-    @Post(":id/follow")
-    @UseGuards(JwtAuthGuard)
     async follow(
         @I18n() i18n: I18nContext,
         @Param("id") comicId: string,
         @Request() req,
     ) {
         const { user } = req;
-        let comic;
+        let comic: Comic;
         // TODO: Check for existence
         try {
             comic = await this.comicsService.findOne(comicId);
@@ -119,7 +92,7 @@ export class ComicsController {
         }
 
         try {
-            return await this.comicsService.follow(comicId, user);
+            return await this.comicsService.follow(comic, user);
         } catch (err) {
             console.log(err);
             throw new BadRequestException();
