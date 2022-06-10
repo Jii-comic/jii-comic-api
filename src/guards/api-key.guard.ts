@@ -19,6 +19,7 @@ export class ApiKeyGuard implements CanActivate {
 
         const { headers } = request;
         const apiKey = headers["api-key"];
+
         if (apiKey !== this.configService.get<string>("API_KEY")) {
             throw new ForbiddenException();
         }

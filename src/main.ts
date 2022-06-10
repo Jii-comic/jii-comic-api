@@ -7,7 +7,6 @@ import {
     I18nValidationExceptionFilter,
 } from "nestjs-i18n";
 import { AppModule } from "./app.module";
-import { ApiKeyGuard } from "./guards/api-key.guard";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -36,6 +35,9 @@ async function bootstrap() {
     SwaggerModule.setup("api", app, document);
 
     const configService = app.get(ConfigService);
-    await app.listen(configService.get("PORT") || 5000);
+    const appPort = configService.get("PORT") || 5000;
+    await app.listen(appPort, () =>
+        console.log(`Server connected at port ${appPort}`),
+    );
 }
 bootstrap();
