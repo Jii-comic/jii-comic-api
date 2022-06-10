@@ -1,7 +1,5 @@
-import { ApiQuery } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsIn, IsNumber, IsOptional } from "class-validator";
-import { i18nValidationMessage } from "nestjs-i18n";
+import { IsBoolean, IsIn, IsNumber, IsOptional, IsUUID } from "class-validator";
 
 export class FindAllOptionsDto {
     @IsOptional()
@@ -19,4 +17,8 @@ export class FindAllOptionsDto {
     @Type(() => Number)
     @IsOptional()
     limit?: number;
+
+    @IsBoolean()
+    @IsOptional()
+    followedByUser?: boolean;
 }

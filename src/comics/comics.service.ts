@@ -23,8 +23,11 @@ export class ComicsService {
         return await this.comicRepository.save(comic);
     }
 
-    async findAll(options?: FindAllOptionsDto): Promise<Comic[]> {
-        return await this.getQueryBuilder()
+    async findAll(
+        options?: FindAllOptionsDto,
+        followedUser?: User,
+    ): Promise<Comic[]> {
+        const query = this.getQueryBuilder()
             .take(options.limit || 0)
             .where("comic.name ilike :name", {
                 name: `%${options.query || ""}%`,
@@ -38,8 +41,16 @@ export class ComicsService {
                 "chapter.updated_at",
             ])
             .leftJoinAndSelect("comic.genres", "genre")
-            .orderBy(`comic.${options.orderBy}`, options.order)
-            .getMany();
+            .orderBy(`comic.${options.orderBy}`, options.order);
+
+        if (followedUser) {
+            query
+                .leftJoin("comic.users", "user")
+                .where("user.user_id = :userId", {
+                    userId: followedUser.user_id,
+                });
+        }
+        return await query.getMany();
     }
 
     async findOne(id: string): Promise<Comic> {

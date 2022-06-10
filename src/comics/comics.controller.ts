@@ -14,6 +14,7 @@ import {
 } from "@nestjs/common";
 import { I18n, I18nContext } from "nestjs-i18n";
 import { JwtAuthGuard } from "src/auth";
+import { User } from "src/users/entities/user.entity";
 import { ComicsService } from "./comics.service";
 import { CreateComicDto } from "./dto/create-comic.dto";
 import { FindAllOptionsDto } from "./dto/find-all-option.dto";
@@ -44,6 +45,17 @@ export class ComicsController {
     @Get()
     async findAll(@Query() options: FindAllOptionsDto) {
         return await this.comicsService.findAll(options);
+    }
+
+    @Get("following")
+    @UseGuards(JwtAuthGuard)
+    async findAllFollowing(
+        @Query() options: FindAllOptionsDto,
+        @Request() req,
+    ) {
+        const user: User = req.user;
+
+        return await this.comicsService.findAll(options, user);
     }
 
     @Get(":id/check-follow-status")

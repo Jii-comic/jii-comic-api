@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UsersModule } from "src/users/users.module";
 
@@ -9,7 +9,7 @@ import { UsersModule } from "src/users/users.module";
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
-                return {
+                const typeOrmConfig = {
                     type: "postgres",
                     host: configService.get("DATABASE_HOST") || "host",
                     port: configService.get("DATABASE_PORT") || 5432,
@@ -21,12 +21,14 @@ import { UsersModule } from "src/users/users.module";
                     // -> No need to import outside `app.module`
                     autoLoadEntities: true,
                     // Auto create schema in db while importing entities
-                    synchronize: true,
+                    synchronize: !(process.env.NODE_ENV === "production"),
                     ssl:
                         process.env.NODE_ENV === "production"
                             ? { rejectUnauthorized: false }
                             : false,
                 };
+
+                return <TypeOrmModuleOptions>typeOrmConfig;
             },
         }),
     ],
