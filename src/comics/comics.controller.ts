@@ -70,7 +70,7 @@ export class ComicsController {
         try {
             return await this.comicsService.checkFollow(comicId, user);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
         }
     }

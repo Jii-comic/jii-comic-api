@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Comic } from "src/comics/entities/comic.entity";
+import { User } from "src/users/entities/user.entity";
+import { Repository } from "typeorm";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { Comment } from "./entities/comment.entity";
 
 @Injectable()
 export class CommentsService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
-  }
+    constructor(
+        @InjectRepository(Comment)
+        private readonly commentsRepository: Repository<Comment>,
+    ) {}
 
-  findAll() {
-    return `This action returns all comments`;
-  }
+    async create(createCommentDto: CreateCommentDto, comic: Comic, user: User) {
+        const newComment = this.commentsRepository.create({
+            ...createCommentDto,
+            comic,
+            user,
+        });
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
+        return await this.commentsRepository.save(newComment);
+    }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
-  }
+    async findAllInComic(comicId: string) {
+        return await this.commentsRepository.find({
+            where: { comic: { comic_id: comicId } },
+            relations: ["user"],
+        });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
-  }
+    // findOne(id: string) {
+    //     return `This action returns a #${id} comment`;
+    // }
+
+    async update(id: string, updateCommentDto: UpdateCommentDto) {
+        return await this.commentsRepository.save({
+            comment_id: id,
+            ...updateCommentDto,
+        });
+    }
+
+    async remove(id: string) {
+        await this.commentsRepository.delete(id);
+
+        return true;
+    }
 }

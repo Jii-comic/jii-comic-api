@@ -1,10 +1,12 @@
 import { Exclude } from "class-transformer";
 import { Comic } from "src/comics/entities/comic.entity";
+import { Comment } from "src/comments/entities/comment.entity";
 import {
     Column,
     CreateDateColumn,
     Entity,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -31,6 +33,9 @@ export class User {
 
     @CreateDateColumn()
     created_at: Date;
+
+    @OneToMany(() => Comment, (comment) => comment.user)
+    comments: Comment[];
 
     @ManyToMany(() => Comic, (comic) => comic.users, { onDelete: "CASCADE" })
     comics: Comic[];

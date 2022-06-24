@@ -1,4 +1,5 @@
 import { Chapter } from "src/chapters/entities/chapter.entity";
+import { Comment } from "src/comments/entities/comment.entity";
 import { Genre } from "src/genres/entities/genre.entity";
 import { User } from "src/users/entities/user.entity";
 import {
@@ -41,6 +42,9 @@ export class Comic {
     // One-to-many entity requires many-to-one relation on the other entity
     @OneToMany(() => Chapter, (chapter) => chapter.comic)
     chapters: Chapter[];
+
+    @OneToMany(() => Comment, (comment) => comment.comic)
+    comments: Comment[];
 
     // Many-to-many entity requires @jointable
     @ManyToMany(() => Genre, (genre) => genre.comics)
