@@ -43,6 +43,12 @@ export class ComicsService {
             .leftJoinAndSelect("comic.genres", "genre")
             .orderBy(`comic.${options.orderBy}`, options.order);
 
+        if (options.genreId) {
+            query.andWhere("genre.genre_id = :genreId", {
+                genreId: options.genreId,
+            });
+        }
+
         if (followedUser) {
             query
                 .leftJoin("comic.users", "user")

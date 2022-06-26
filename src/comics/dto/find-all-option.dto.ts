@@ -5,6 +5,9 @@ export class FindAllOptionsDto {
     @IsOptional()
     query?: string;
 
+    @IsOptional()
+    genreId?: string;
+
     @IsIn(["created_at", "updated_at"])
     @IsOptional()
     orderBy?: "created_at" | "updated_at";
