@@ -10,20 +10,13 @@ import { UserRating } from "./entities/user-rating.entity";
 
 @Injectable()
 export class UserRatingsService {
-    private _userRatingQueryBuilder: SelectQueryBuilder<UserRating>;
-
     constructor(
         @InjectRepository(UserRating)
         private readonly _userRatingRepository: Repository<UserRating>,
     ) {}
 
     getQueryBuilder(alias?: string) {
-        if (!this._userRatingQueryBuilder) {
-            this._userRatingQueryBuilder =
-                this._userRatingRepository.createQueryBuilder(alias);
-        }
-
-        return this._userRatingQueryBuilder;
+        return this._userRatingRepository.createQueryBuilder(alias);
     }
 
     findAllFromComic(comic: Comic) {
@@ -36,8 +29,8 @@ export class UserRatingsService {
     getAverageRatingFromComic(comic: Comic) {
         return this.getQueryBuilder("userRating")
             .innerJoinAndSelect("userRating.comic", "comic")
-            .where("comic.comic_id=:comic_id", {
-                comic_id: comic.comic_id,
+            .where("comic.comic_id=:comicId", {
+                comicId: comic.comic_id,
             })
             .select("AVG(userRating.rating_score)", "avg_rating_score")
             .getRawOne();
