@@ -13,10 +13,10 @@ export class ComicsGuard implements CanActivate {
     constructor(private readonly comicsService: ComicsService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request = context.switchToHttp().getRequest();
-        const { comicId } = request.params || {};
+        const req = context.switchToHttp().getRequest();
+        const { comicId } = req.params || {};
 
-        const i18n = getI18nContextFromRequest(request);
+        const i18n = getI18nContextFromRequest(req);
         let comic;
 
         if (!comicId) {
@@ -33,6 +33,7 @@ export class ComicsGuard implements CanActivate {
             throw new BadRequestException(await i18n.t("comic.NOT_FOUND"));
         }
 
+        req.comic = comic;
         return true;
     }
 }

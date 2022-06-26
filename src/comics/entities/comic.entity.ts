@@ -1,6 +1,7 @@
 import { Chapter } from "src/chapters/entities/chapter.entity";
 import { Comment } from "src/comments/entities/comment.entity";
 import { Genre } from "src/genres/entities/genre.entity";
+import { UserRating } from "src/user-ratings/entities/user-rating.entity";
 import { User } from "src/users/entities/user.entity";
 import {
     Column,
@@ -45,6 +46,9 @@ export class Comic {
 
     @OneToMany(() => Comment, (comment) => comment.comic)
     comments: Comment[];
+
+    @OneToMany(() => UserRating, (rating) => rating.comic)
+    ratings: UserRating[];
 
     // Many-to-many entity requires @jointable
     @ManyToMany(() => Genre, (genre) => genre.comics)

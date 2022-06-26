@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { Comic } from "src/comics/entities/comic.entity";
 import { Comment } from "src/comments/entities/comment.entity";
+import { UserRating } from "src/user-ratings/entities/user-rating.entity";
 import {
     Column,
     CreateDateColumn,
@@ -39,4 +40,7 @@ export class User {
 
     @ManyToMany(() => Comic, (comic) => comic.users, { onDelete: "CASCADE" })
     comics: Comic[];
+
+    @OneToMany(() => UserRating, (rating) => rating.user)
+    ratings: UserRating[];
 }

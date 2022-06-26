@@ -12,6 +12,7 @@ import { UploadModule } from "./upload/upload.module";
 import { CommentsModule } from "./comments/comments.module";
 import { APP_GUARD } from "@nestjs/core";
 import { ApiKeyGuard } from "./guards/api-key.guard";
+import { UserRatingsModule } from './user-ratings/user-ratings.module';
 
 @Module({
     providers: [
@@ -32,6 +33,7 @@ import { ApiKeyGuard } from "./guards/api-key.guard";
         ComicsModule,
         CloudinaryModule,
         CommentsModule,
+        UserRatingsModule,
     ],
 })
 export class AppModule {}
