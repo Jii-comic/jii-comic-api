@@ -37,7 +37,9 @@ export class UserRatingsService {
     }
 
     findOne(query: any) {
-        return this._userRatingRepository.findOne(query);
+        return this._userRatingRepository.findOne(query, {
+            relations: ["user"],
+        });
     }
 
     async rate(ratingDto: RatingDto, user?: User, comic?: Comic) {

@@ -17,6 +17,9 @@ export class UserRating {
     @Column({ type: "float" })
     rating_score: number;
 
+    @Column({ default: "" })
+    content: string;
+
     @ManyToOne(() => User, (user) => user.ratings)
     user: User;
 

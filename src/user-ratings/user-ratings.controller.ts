@@ -45,6 +45,13 @@ export class UserRatingsController {
     //     return this._userRatingsService.findOne(+id);
     // }
 
+    @Get("/my-rating")
+    @UseGuards(JwtAuthGuard)
+    async findMyRating(@Request() req) {
+        const { user } = req;
+        return await this._userRatingsService.findOne({ user });
+    }
+
     @Post()
     @UseGuards(JwtAuthGuard)
     async rate(@Request() req, @Body() ratingDto: RatingDto) {
